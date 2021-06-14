@@ -1,3 +1,3 @@
-module makesite
+module github.com/lwrgithub/makesite
 
-go 1.13
+go 1.16
