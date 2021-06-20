@@ -58,8 +58,8 @@ If you get stuck on any step, be sure to print the output to `stdout`!
 - [x] Manually test the generated HTML page by running `./makesite`. Double-click the `first-post.html` file that appears in your directory after running the command to open the generated page in your browser.
 - [x] **Add, commit, and push to GitHub**.
 - [x] Add a new flag to your command named `file`. This flag represents the name of any `.txt` file in the same directory as your program. Run `./makesite --file=latest-post.txt` to test.
-- [ ] Update the `save` function to use the input filename to generate a new HTML file. For example, if the input file is named `latest-post.txt`, the generated HTML file should be named `latest-post.html`.
-- [ ] **Add, commit, and push to GitHub**.
+- [x] Update the `save` function to use the input filename to generate a new HTML file. For example, if the input file is named `latest-post.txt`, the generated HTML file should be named `latest-post.html`.
+- [x] **Add, commit, and push to GitHub**.
 
 #### v1.0 Stretch Challenges
 
@@ -69,9 +69,9 @@ If you get stuck on any step, be sure to print the output to `stdout`!
 
 #### v1.1 Requirements
 
-- [ ] Create 3 new `.txt` files for testing in the same directory as your project.
-- [ ] Add a new flag to the `makesite` command named `dir`.
-- [ ] Use the flag to find all `.txt` files in the given directory. Print them to `stdout`.
+- [x] Create 3 new `.txt` files for testing in the same directory as your project.
+- [x] Add a new flag to the `makesite` command named `dir`.
+- [x] Use the flag to find all `.txt` files in the given directory. Print them to `stdout`.
 - [ ] With the list of `.txt` files you found, generate an HTML page for each.
 - [ ] Run `./makesite --dir=.` to test in your local directory.
 - [ ] **Add, commit, and push to GitHub**.

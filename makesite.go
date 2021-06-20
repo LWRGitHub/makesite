@@ -4,9 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 	"text/template"
+	// "log"
 )
 
 type entry struct {
@@ -21,14 +23,34 @@ type ToDo struct {
 
 func main() {
 	var filename string
+	var directory string
 
 	flag.StringVar(&filename, "file", "", "Text file name")
+	flag.StringVar(&directory, "dir", "", "File name")
 	flag.Parse()
-	if filename == "" {
-		fmt.Println("is empty")
-		return
+
+	if directory != "" {
+		directoryStuff(directory)
+	} else if filename != "" {
+		fileStuff(filename)
 	}
 
+}
+
+func directoryStuff(directory string) {
+	files, err := ioutil.ReadDir(directory)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range files {
+		if file.Name()[len(file.Name())-3:] == "txt" {
+			fmt.Println(file.Name())
+		}
+	}
+}
+
+func fileStuff(filename string) {
 	fileContents, err := ioutil.ReadFile(filename)
 	if err != nil {
 		panic(err)
