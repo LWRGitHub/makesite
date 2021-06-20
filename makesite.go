@@ -1,10 +1,12 @@
 package main
 
 import (
-	"html/template"
+	// "html/template"
+	"io/ioutil"
 	"os"
+
 	// "fmt"
-	// "text/template"
+	"text/template"
 )
 
 type entry struct {
@@ -18,9 +20,20 @@ type ToDo struct {
 }
 
 func main() {
-	t := template.Must(template.New("template.tmpl").ParseFiles("new.html"))
-	err = t.Execute(os.Stdout, todos)
+	fileContents, err := ioutil.ReadFile("first-post.txt")
 	if err != nil {
 		panic(err)
 	}
+
+	f, err := os.Create("first-post.html")
+	if err != nil {
+		panic(err)
+	}
+
+	t := template.Must(template.New("template.tmpl").ParseFiles("template.tmpl"))
+	err = t.Execute(f, string(fileContents))
+	if err != nil {
+		panic(err)
+	}
+	f.Close()
 }
