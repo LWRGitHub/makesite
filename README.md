@@ -1,6 +1,6 @@
 # 🔗 makesite
 
-[![Go Report Card](https://github.com/LWRGitHub/makesite)
+[Go Report Card](https://github.com/LWRGitHub/makesite)
 
 _Create your own custom Static Site Generator (like [Jekyll](https://jekyllrb.com/) or [Hugo](https://gohugo.io/)) by cloning and fulfilling the requirements in this repo!_
 
@@ -51,9 +51,9 @@ If you get stuck on any step, be sure to print the output to `stdout`!
 #### v1.0 Requirements
 
 - [x] Edit line `4` of `README.md`. Change this line to the following, replacing `YOUR_USERNAME` and `YOUR_REPONAME` with your GitHub username and repository name respectively.
-- [ ] Read in the contents of the provided `first-post.txt` file.
-- [ ] Edit the provided HTML template (`template.tmpl`) to display the contents of `first-post.txt`.
-- [ ] Render the contents of `first-post.txt` using Go Templates and print it to stdout.
+- [x] Read in the contents of the provided `first-post.txt` file.
+- [x] Edit the provided HTML template (`template.tmpl`) to display the contents of `first-post.txt`.
+- [x] Render the contents of `first-post.txt` using Go Templates and print it to stdout.
 - [ ] Write the HTML template to the filesystem to a file. Name it `first-post.html`.
 - [ ] Manually test the generated HTML page by running `./makesite`. Double-click the `first-post.html` file that appears in your directory after running the command to open the generated page in your browser.
 - [ ] **Add, commit, and push to GitHub**.
