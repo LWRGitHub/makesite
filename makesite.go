@@ -22,7 +22,7 @@ type ToDo struct {
 func main() {
 	var filename string
 
-	flag.StringVar(&filename, "file", "", "File name")
+	flag.StringVar(&filename, "file", "", "Text file name")
 	flag.Parse()
 	if filename == "" {
 		fmt.Println("is empty")
