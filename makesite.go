@@ -1,11 +1,11 @@
 package main
 
 import (
-	// "html/template"
+	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
-
-	// "fmt"
+	"strings"
 	"text/template"
 )
 
@@ -20,12 +20,21 @@ type ToDo struct {
 }
 
 func main() {
-	fileContents, err := ioutil.ReadFile("first-post.txt")
+	var filename string
+
+	flag.StringVar(&filename, "file", "", "File name")
+	flag.Parse()
+	if filename == "" {
+		fmt.Println("is empty")
+		return
+	}
+
+	fileContents, err := ioutil.ReadFile(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	f, err := os.Create("first-post.html")
+	f, err := os.Create(strings.SplitN(filename, ".", 2)[0] + ".html")
 	if err != nil {
 		panic(err)
 	}
