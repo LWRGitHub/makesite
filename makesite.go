@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -98,7 +99,8 @@ func fileStuff(filename string) {
 }
 
 // translateText translates input text and returns translated text.
-func translateText(text string) error {
+func translateText(w io.Writer, text string) error {
+	// w := io.Writer
 	projectID := "carbide-program-317404"
 	sourceLang := "en-US"
 	targetLang := "fr"
@@ -126,7 +128,7 @@ func translateText(text string) error {
 
 	// Display the translation for each input text provided
 	for _, translation := range resp.GetTranslations() {
-		return translation.GetTranslatedText()
+		fmt.Fprintf(w, "Translated text: %v\n", translation.GetTranslatedText())
 	}
 
 	return nil
