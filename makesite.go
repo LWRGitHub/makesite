@@ -4,15 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 	"text/template"
 
-	translate "cloud.google.com/go/translate/apiv3"
-	translatepb "google.golang.org/genproto/googleapis/cloud/translate/v3"
+	"cloud.google.com/go/translate"
+	"golang.org/x/text/language"
 )
 
 type entry struct {
@@ -32,41 +31,18 @@ func main() {
 
 	flag.StringVar(&filename, "file", "", "Text file name")
 	flag.StringVar(&directory, "dir", "", "File name")
-	flag.StringVar(&directory, "trans", "", "File name")
+	flag.StringVar(&transLang, "trans", "en", "transLang")
 	flag.Parse()
 
 	if directory != "" {
-		directoryStuff(directory)
+		directoryStuff(directory, transLang)
 	} else if filename != "" {
-		fileStuff(filename)
-	} else if transLang != "" {
-		trans1(filename)
+		fileStuff(filename, transLang)
 	}
 
 }
 
-func trans1(filename string) {
-	fileContents, err := ioutil.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
-
-	fileContents = translateText(fileContents)
-
-	f, err := os.Create(strings.SplitN(filename, ".", 2)[0] + ".html")
-	if err != nil {
-		panic(err)
-	}
-
-	t := template.Must(template.New("template.tmpl").ParseFiles("template.tmpl"))
-	err = t.Execute(f, string(fileContents))
-	if err != nil {
-		panic(err)
-	}
-	f.Close()
-}
-
-func directoryStuff(directory string) {
+func directoryStuff(directory, targetLang string) {
 	files, err := ioutil.ReadDir(directory)
 	if err != nil {
 		log.Fatal(err)
@@ -74,13 +50,20 @@ func directoryStuff(directory string) {
 
 	for _, file := range files {
 		if file.Name()[len(file.Name())-3:] == "txt" {
-			fileStuff(file.Name())
+			fileStuff(file.Name(), targetLang)
 		}
 	}
 }
 
-func fileStuff(filename string) {
+func fileStuff(filename, targetLang string) {
 	fileContents, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+
+	contents := string(fileContents)
+
+	translation, err := translateText(contents, targetLang)
 	if err != nil {
 		panic(err)
 	}
@@ -91,7 +74,7 @@ func fileStuff(filename string) {
 	}
 
 	t := template.Must(template.New("template.tmpl").ParseFiles("template.tmpl"))
-	err = t.Execute(f, string(fileContents))
+	err = t.Execute(f, translation)
 	if err != nil {
 		panic(err)
 	}
@@ -99,37 +82,24 @@ func fileStuff(filename string) {
 }
 
 // translateText translates input text and returns translated text.
-func translateText(w io.Writer, text string) error {
-	// w := io.Writer
-	projectID := "carbide-program-317404"
-	sourceLang := "en-US"
-	targetLang := "fr"
-	// text := "Text you wish to translate"
+func translateText(text, targetLang string) (string, error) {
 
 	ctx := context.Background()
-	client, err := translate.NewTranslationClient(ctx)
+
+	lang, err := language.Parse(targetLang)
 	if err != nil {
-		return fmt.Errorf("NewTranslationClient: %v", err)
-	}
-	defer client.Close()
-
-	req := &translatepb.TranslateTextRequest{
-		Parent:             fmt.Sprintf("projects/%s/locations/global", projectID),
-		SourceLanguageCode: sourceLang,
-		TargetLanguageCode: targetLang,
-		MimeType:           "text/plain", // Mime types: "text/plain", "text/html"
-		Contents:           []string{text},
+		return text, fmt.Errorf("targetLangTag: %v", err)
 	}
 
-	resp, err := client.TranslateText(ctx, req)
+	client, err := translate.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("TranslateText: %v", err)
+		return text, fmt.Errorf("NewTranslationClient: %v", err)
 	}
 
-	// Display the translation for each input text provided
-	for _, translation := range resp.GetTranslations() {
-		fmt.Fprintf(w, "Translated text: %v\n", translation.GetTranslatedText())
+	translation, err := client.Translate(ctx, []string{text}, lang, nil)
+	if err != nil {
+		return text, fmt.Errorf("translation: %v", err)
 	}
 
-	return nil
+	return translation[0].Text, nil
 }
